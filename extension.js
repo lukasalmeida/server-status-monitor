@@ -22,12 +22,20 @@ export default class ServerStatusMonitorExtension extends Extension {
       icon_size: 16,
     });
 
-    this._statusLabel = new St.Label({
-      text: '⏳',
+    this._hostLabel = new St.Label({
+      text: this._host || 'No host configured',
       y_align: Clutter.ActorAlign.CENTER,
+      style: 'margin-left: 4px;',
+    });
+
+    this._statusLabel = new St.Label({
+      text: '●',
+      y_align: Clutter.ActorAlign.CENTER,
+      style: 'font-size: 9px; margin-left: 4px;',
     });
 
     this._button.add_child(this._icon);
+    this._button.add_child(this._hostLabel);
     this._button.add_child(this._statusLabel);
     this._button.tooltip_text = `Server status: ${this._host}`;
 
@@ -64,6 +72,7 @@ export default class ServerStatusMonitorExtension extends Extension {
     this._panelPosition = null;
     this._button = null;
     this._icon = null;
+    this._hostLabel = null;
     this._statusLabel = null;
   }
 
@@ -75,6 +84,7 @@ export default class ServerStatusMonitorExtension extends Extension {
       this._host = nextHost;
       this._checkInterval = nextInterval;
       this._button.tooltip_text = `Server status: ${this._host}`;
+      this._hostLabel.text = this._host || 'No host configured';
 
       if (this._timeoutId) {
         GLib.source_remove(this._timeoutId);
@@ -125,19 +135,21 @@ export default class ServerStatusMonitorExtension extends Extension {
   }
 
   _updateStatus(state, host) {
-    if (!this._statusLabel) {
+    if (!this._statusLabel || !this._hostLabel) {
       return;
     }
 
     this._status = state;
     const statusMap = {
-      online: { label: '🟢', icon: 'network-transmit-symbolic' },
-      offline: { label: '🔴', icon: 'network-error-symbolic' },
-      waiting: { label: '⚪', icon: 'network-offline-symbolic' },
+      online: { dot: '●', color: '#2ec27e', icon: 'network-transmit-symbolic' },
+      offline: { dot: '●', color: '#e01b24', icon: 'network-error-symbolic' },
+      waiting: { dot: '●', color: '#8b8b8b', icon: 'network-offline-symbolic' },
     };
 
     const next = statusMap[state] || statusMap.waiting;
-    this._statusLabel.text = next.label;
+    this._hostLabel.text = host || 'No host configured';
+    this._statusLabel.text = next.dot;
+    this._statusLabel.style = `color: ${next.color}; font-size: 9px; margin-left: 4px;`;
     this._icon.icon_name = next.icon;
     this._button.tooltip_text = `Server status: ${host}`;
   }
