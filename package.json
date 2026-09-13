@@ -1,0 +1,11 @@
+{
+  "name": "server-status-monitor",
+  "version": "1.0.0",
+  "description": "GNOME Shell extension that shows server availability in the top bar.",
+  "main": "extension.js",
+  "type": "module",
+  "scripts": {
+    "check": "node --check extension.js && node --check prefs.js"
+  },
+  "private": true
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="server-status-monitor">
+  <schema id="org.gnome.shell.extensions.server-status-monitor" path="/org/gnome/shell/extensions/server-status-monitor/">
+    <key name="host" type="s">
+      <default>"127.0.0.1"</default>
+      <summary>Host or IP address to monitor</summary>
+      <description>IP or hostname used to verify whether the service is reachable.</description>
+    </key>
+
+    <key name="check-interval" type="i">
+      <default>30</default>
+      <summary>Check interval in seconds</summary>
+      <description>How often the extension should check the host availability.</description>
+    </key>
+  </schema>
+</schemalist>
